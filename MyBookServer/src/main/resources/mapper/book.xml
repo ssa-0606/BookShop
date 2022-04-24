@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imikasa.mapper.BookMapper">
+    <insert id="addBook" parameterType="com.imikasa.pojo.Book">
+        insert into book (name,author,cover,price,category_id,book_info_id) values (#{name},#{author},#{cover},#{price},#{categoryId},#{bookInfoId})
+    </insert>
+    <delete id="deleteBook" parameterType="int">
+        delete from book where id = #{id}
+    </delete>
+    <update id="updateBook" parameterType="com.imikasa.pojo.Book">
+        update book set name=#{name} ,author=#{author},cover=#{cover},price=#{price},category_id=#{categoryId},book_info_id=#{bookInfoId} where id=#{id}
+    </update>
+    <select id="findBook" parameterType="int" resultType="com.imikasa.pojo.Book">
+        select * from book where id =#{id}
+    </select>
+    <select id="findAllBook" resultType="com.imikasa.pojo.Book">
+        select * from book;
+    </select>
+</mapper>
