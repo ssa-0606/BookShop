@@ -5,6 +5,8 @@ import com.imikasa.pojo.Book;
 import com.imikasa.result.CommonResult;
 import com.imikasa.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "book-cache")
 public class BookServiceImpl implements BookService {
 
     @Autowired
@@ -81,6 +84,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Cacheable
     public CommonResult<List<Book>> findAll() {
         return new CommonResult<>(200,"success",bookMapper.findAllBook());
     }
