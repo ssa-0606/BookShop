@@ -13,7 +13,16 @@ spring:
       mode: always
       schema-locations: classpath:db/schema.sql
       data-locations: classpath:db/data.sql
+  redis:
+    host: imikasa.com
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 8
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
+logging:
+  level:
+    com.imikasa.mapper: trace
