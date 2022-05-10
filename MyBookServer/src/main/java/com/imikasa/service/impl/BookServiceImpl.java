@@ -5,8 +5,7 @@ import com.imikasa.pojo.Book;
 import com.imikasa.result.CommonResult;
 import com.imikasa.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,7 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
+    @CacheEvict(key = "'LIST'")
     public CommonResult<Book> addBook(Book book) {
         if(book == null){
             return new CommonResult(400,"you must send args...",null);
@@ -44,6 +44,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(key = "#id"),
+            @CacheEvict(key = "'LIST'")
+    })
     public CommonResult<Integer> deleteBook(int id) {
         int i = bookMapper.deleteBook(id);
         if (i>0){
@@ -54,6 +58,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @CachePut(key = "#book.getId()")
+    @CacheEvict(key = "'LIST'")
     public CommonResult<Book> updateBook(Book book) {
         if(book==null){
             return new CommonResult<>(400,"you must send args ...",null);
@@ -69,8 +75,8 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    @Override
-    public CommonResult<Book> findBook(int id) {
+
+    public CommonResult<Book> findBook1(int id) {
         if(id<=0){
             return new CommonResult<>(400,"id must dayu 0",null);
         }
@@ -82,10 +88,23 @@ public class BookServiceImpl implements BookService {
         redisTemplate.opsForValue().set("book"+id,book);
         return new CommonResult<>(200,"success",book);
     }
+    @Cacheable(key = "#id")
+    @Override
+    public CommonResult<Book> findBook(int id){
+        if(id<=0){
+            return new CommonResult<>(400,"id must dayu 0",null);
+        }
+        Book book = bookMapper.findBook(id);
+        return new CommonResult<>(200,"success",book);
+    }
 
     @Override
-    @Cacheable
+    @Cacheable(key = "'LIST'")
     public CommonResult<List<Book>> findAll() {
         return new CommonResult<>(200,"success",bookMapper.findAllBook());
     }
+
+
+
+
 }

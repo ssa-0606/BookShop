@@ -1,5 +1,5 @@
 server:
-  port: 8800
+  port: 8801
 spring:
   application:
     name: book-server
@@ -26,3 +26,4 @@ mybatis:
 logging:
   level:
     com.imikasa.mapper: trace
+    com.imikasa.service.impl: trace
